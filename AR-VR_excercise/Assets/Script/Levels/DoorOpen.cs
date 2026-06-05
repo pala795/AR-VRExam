@@ -1,16 +1,23 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 
 public class DoorOpen : MonoBehaviour
 {
     [SerializeField] private bool open = false;
-
+    [SerializeField] private GameObject objectToActive;
+    [SerializeField] private GameObject objectToDeActive;
+    [SerializeField] private DoorLevel1 doorLevel1;    
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player" && open)
         {
-            StartCoroutine(RoomTransitionCoroutine());
+            objectToActive.SetActive(true);
+            objectToDeActive.SetActive(false);
+            
+            
         }
     }
 
@@ -19,22 +26,9 @@ public class DoorOpen : MonoBehaviour
         open = value;
         return open;
     }
-    
-    
-    private IEnumerator RoomTransitionCoroutine( )
-    {
-        //1 - Fade to Black
-        FadeScreen.Instance.FadeIn();
-        
-        yield return new WaitForSeconds(2f);
-        
-        //2 - Spawn the next room
-        LevelController spawner = LevelController.Instance;
 
-        spawner.SpawnRoom();
-       
-        //6 - Fade back to gameplay
-        FadeScreen.Instance.FadeOut();
-        yield return null;
+    private bool GetOpen()
+    {
+        return open;
     }
 }
